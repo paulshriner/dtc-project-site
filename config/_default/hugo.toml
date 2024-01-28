@@ -1,6 +1,6 @@
 title = "DeckTechCentral"
-baseurl = "/"
-canonifyURLs = false
+baseurl = "https://paulshriner.github.io/"
+canonifyURLs = true
 disableAliases = true
 disableHugoGeneratorInject = true
 # disableKinds = ["taxonomy", "term"]
