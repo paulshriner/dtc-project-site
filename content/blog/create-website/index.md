@@ -30,10 +30,3 @@ npm run dev
 ```
 npm run create docs/guides/faq.md
 ```
-
-### Deploying the page on GitHub Pages:
-Run the command:
-```
-npm run build
-```
-Then push the changes to GitHub.
