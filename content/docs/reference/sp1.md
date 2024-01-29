@@ -21,6 +21,8 @@ seo:
 
 #### Added by: [Paul](/contributors/paul/)
 
+These are the documents that DTC Team created during the Senior Project I course. If you aren't familar with this project, then these documents are a good place to start:
+
 [Proposal](/pdfs/DTC_Proposal.pdf)
 
 [Requirements](/pdfs/DTC_Requirements.pdf)

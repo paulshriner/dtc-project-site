@@ -2,8 +2,8 @@
 title: "Privacy Policy"
 description: "Copyright and legal information"
 summary: "Copyright and legal information"
-date: 2023-09-07T17:19:07+02:00
-lastmod: 2023-09-07T17:19:07+02:00
+date: 2024-01-27T22:06:36-05:00
+lastmod: 2024-01-27T22:06:36-05:00
 draft: false
 type: "legal"
 seo:

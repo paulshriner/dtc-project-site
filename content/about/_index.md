@@ -12,6 +12,4 @@ seo:
   noindex: false # false (default) or true
 ---
 
-<img src="/DTC_Logo.png" width="100%" height="100%" alt="DTC Logo"><br>
-
 DeckTechCentral is a deck list management service for the trading card game *Magic: The Gathering*. It is being created by Christian Messmer, Paul Shriner, Adir Turgeman, and Luke Vukovich for their Senior Project at PennWest California in Spring 2024.
