@@ -19,8 +19,6 @@ seo:
   noindex: false # false (default) or true
 ---
 
-#### Added by: [Paul](/contributors/paul/)
-
 [Weekly Report Document](/pdfs/Weekly_Report_1.pdf)
 
 [Weekly Report Presentation](/pptxs/Weekly_Report_1.pptx)
