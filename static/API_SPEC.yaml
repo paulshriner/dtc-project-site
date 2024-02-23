@@ -273,7 +273,7 @@ paths:
           description: deck successfully updated
         '401':
           description: Unauthorized
-  /deck/{userName}:
+  /decks/{userName}:
     parameters:
       - name: userName
         in: path
@@ -294,6 +294,90 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/DeckSearchResponse'
+  /deck/search:
+    parameters:
+      - name: name
+        in: query
+        description: A fuzzy search based on the name of the deck
+        required: false
+        schema:
+          type: string
+      - name: format
+        in: query
+        description: the format the deck should be in
+        required: false
+        schema:
+          type: string
+      - name: commander
+        in: query
+        description: the commander of a deck list
+        required: false
+        schema:
+          type: string
+      - name: sortBy
+        in: query
+        description: how to sort the decks uses name by default, can be sorted by name, likes, views, and creators
+        required: false
+        schema:
+          type: string
+    get:
+      tags:
+        - deck
+      summary: Search for deck
+      responses:
+        '200':
+          description: decks were found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeckSearchResponse'
+  /deck/like/{deckId}:
+    parameters:
+       - name: deckId
+         in: path
+         description: a guid of the deck that is wanted
+         required: true
+         schema:
+          type: string
+    patch:
+      tags:
+        - deck
+      summary: likes or removes like from a deck
+      responses:
+        '200':
+          description: deck was liked/disliked
+        '404':
+          description: deck not found
+  /deck/like/{deckId}/{userId}:
+    parameters:
+      - name: deckId
+        in: path
+        description: a guid of the deck that is wanted
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        description: a guid of the user
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - deck
+      summary: returns if a user likes a given deck
+      responses:
+        '200': 
+          description: deck and user found
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '404':
+          description: either deck does not exist
+        
   /card/{cardId}:
     parameters:
       - name: cardId
