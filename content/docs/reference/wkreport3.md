@@ -11,7 +11,6 @@ menu:
     identifier: "wkreport3-d2ebdfc3e46b64871d8710e3c1e98f67"
 weight: 999
 toc: true
-contributors: [Paul]
 seo:
   title: "Weekly Report 3" # custom title (optional)
   description: "The third weekly report" # custom description (recommended)

@@ -11,7 +11,6 @@ menu:
     identifier: "wkreport4-4958a7c98c3252a35130420bf42f4cca"
 weight: 999
 toc: true
-contributors: [Paul]
 seo:
   title: "Weekly Report 4" # custom title (optional)
   description: "The fourth weekly report" # custom description (recommended)

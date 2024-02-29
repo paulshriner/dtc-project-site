@@ -11,7 +11,6 @@ menu:
     identifier: "wkreport2-54974eec9d04376f944bc60b0d58cb33"
 weight: 999
 toc: true
-contributors: [Paul]
 seo:
   title: "Weekly Report 2" # custom title (optional)
   description: "The second weekly report" # custom description (recommended)

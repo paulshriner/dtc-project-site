@@ -11,7 +11,6 @@ menu:
     identifier: "sp1-7ab54e02afd3afcaa7813905af0f8377"
 weight: 999
 toc: true
-contributors: [Paul]
 seo:
   title: "Senior Project 1 Documents" # custom title (optional)
   description: "Documents created during the Senior Project 1 class" # custom description (recommended)

@@ -11,7 +11,6 @@ menu:
     identifier: "wkreport1-cf26f8272e008083d5bfc82b19df7761"
 weight: 999
 toc: true
-contributors: [Paul]
 seo:
   title: "Weekly Report 1" # custom title (optional)
   description: "The first weekly report" # custom description (recommended)
