@@ -18,6 +18,6 @@ seo:
   noindex: false # false (default) or true
 ---
 
-<!-- [Weekly Report Document](/pdfs/Weekly_Report_5.pdf) -->
+[Weekly Report Document](/pdfs/Weekly_Report_5.pdf)
 
 [Weekly Report Presentation](/pptxs/Weekly_Report_5.pptx)
