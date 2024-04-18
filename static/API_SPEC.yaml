@@ -1,832 +1,455 @@
-openapi: 3.0.3
+openapi: 3.0.1
 info:
-  title: DeckTechCentral - OpenAPI 3.0
-  description: |-
-    This is an api for the management, creation, and viewing of decks for the service known as
-    DeckTechCentral
-  contact: {}
-  version: 1.0.11
-externalDocs:
-  description: Development Progress of DeckTechCentral
-  url: https://paulshriner.github.io/
-servers:
-  - url: http://localhost/5272
-tags:
-  - name: deck
-    description: Information of decks
-  - name: user
-    description: User information
-  - name: card
-    description: card information
-    externalDocs:
-      description: card information gain from
-      url: https://scryfall.com/
+  title: DTC API
+  version: '2.0'
 paths:
-  /user:
-    post:
-      tags:
-        - user
-      summary: Create user
-      description: This can only be done by the logged in user.
-      operationId: createUser
-      requestBody:
-        description: Created user object
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/User'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        default:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/User'
-  /user/login:
-    get:
-      tags:
-        - user
-      summary: Logs user into the system
-      description: ''
-      operationId: loginUser
-      parameters:
-        - name: username
-          in: query
-          description: The user name for login
-          required: false
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: The password for login in clear text
-          required: false
-          schema:
-            type: string
-      responses:
-        '200':
-          description: successful operation
-          headers:
-            X-Rate-Limit:
-              description: calls per hour allowed by the user
-              schema:
-                type: integer
-                format: int32
-            X-Expires-After:
-              description: date in UTC when token expires
-              schema:
-                type: string
-                format: date-time
-          content:
-            application/xml:
-              schema:
-                type: string
-            application/json:
-              schema:
-                type: string
-        '400':
-          description: Invalid username/password supplied
-  /user/logout:
-    get:
-      tags:
-        - user
-      summary: Logs out current logged in user session
-      description: ''
-      operationId: logoutUser
-      parameters: []
-      responses:
-        default:
-          description: successful operation
-  /user/{username}:
-    get:
-      tags:
-        - user
-      summary: Get user by user name
-      description: ''
-      operationId: getUserByName
-      parameters:
-        - name: username
-          in: path
-          description: 'The name that needs to be fetched. Use user1 for testing. '
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          description: Invalid username supplied
-        '404':
-          description: User not found
-    put:
-      tags:
-        - user
-      summary: Update user
-      description: This can only be done by the logged in user.
-      operationId: updateUser
-      parameters:
-        - name: username
-          in: path
-          description: name that need to be deleted
-          required: true
-          schema:
-            type: string
-      requestBody:
-        description: Update an existent user in the store
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/User'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        default:
-          description: successful operation
-    delete:
-      tags:
-        - user
-      summary: Delete user
-      description: This can only be done by the logged in user.
-      operationId: deleteUser
-      parameters:
-        - name: username
-          in: path
-          description: The name that needs to be deleted
-          required: true
-          schema:
-            type: string
-      responses:
-        '400':
-          description: Invalid username supplied
-        '404':
-          description: User not found
   /deck:
-    tags:
-      - deck
     post:
-      parameters:
-        - name: deck
-          in: requestBody
-          description: the deck creation request for the created deck
-          required: true
-          schemas:
-            $ref: '#/components/schemas/DeckCreationRequest'
-      responses:
-        '200': 
-          description: deck was created
-      security:
-        - deckmanagement_auth:
-  /deck/{deckId}:
-    parameters:
-       - name: deckId
-         in: path
-         description: a guid of the deck that is wanted
-         required: true
-          - write:dekcs
-         schema:
-          type: string
-    get:
       tags:
-       - deck
-      summary: Get the specified deck
-      responses:
-        '200':
-          description: deck was found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Deck'
-        '400':
-          description: Invalid deckId supplied
-        '404':
-          description: Deck not found
-      security:
-       - deckmanagement_auth:
-          - read:decks
-    put:
-      tags:
-       - deck
-      summary: Update a specified deck
+        - DeckList
       requestBody:
-        description: Deck object to update using
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Deck'
+              $ref: '#/components/schemas/DeckCreationRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/DeckCreationRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/DeckCreationRequest'
       responses:
-        default:
-          description: deck successfully updated
-        '401':
-          description: Unauthorized
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/DeckResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeckResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/DeckResponse'
+  /deck/{deckId}:
+    get:
+      tags:
+        - DeckList
+      parameters:
+        - name: deckId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
     delete:
       tags:
-       - deck
-      summary: Get the specified deck
+        - DeckList
+      parameters:
+        - name: deckId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+            format: uuid
+        - name: userId
+          in: header
+          style: simple
+          schema:
+            type: string
+            format: uuid
       responses:
         '200':
-          description: deck was deleted
-        '400':
-          description: Invalid deckId supplied
-        '401':
-          description: Aunauthorized
-        '404':
-          description: Deck not found
-  /deck/users/{userName}:
-    parameters:
-      - name: userId
-        in: path
-        description: the id of the user to see the decks
-        required: true
-        schema:
-          type: string
-    get:
+          description: Success
+    put:
       tags:
-        - deck
-      summary: Get all visible decks from the user
+        - DeckList
+      parameters:
+        - name: deckId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeckCreationRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/DeckCreationRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/DeckCreationRequest'
       responses:
         '200':
-          description: decks were found
+          description: Success
           content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/DeckResponse'
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/DeckSearchResponse'
+                $ref: '#/components/schemas/DeckResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/DeckResponse'
   /deck/search:
-    parameters:
-      - name: name
-        in: query
-        description: A fuzzy search based on the name of the deck
-        required: false
-        schema:
-          type: string
-      - name: format
-        in: query
-        description: the format the deck should be in
-        required: false
-        schema:
-          type: string
-      - name: commander_1
-        in: query
-        description: the commander of a deck list
-        required: false
-        schema:
-          type: string
-      - name: commander_2
-        in: query
-        description: second commander of the deck
-        required: false
-        schema: 
-          type: string
-      - name: sortBy
-        in: query
-        description: how to sort the decks uses name by default, can be sorted by name, likes, views, and creators
-        required: false
-        schema:
-          type: string
     get:
       tags:
-        - deck
-      summary: Search for deck
+        - DeckList
+      parameters:
+        - name: name
+          in: query
+          style: form
+          schema:
+            type: string
+        - name: format
+          in: query
+          style: form
+          schema:
+            type: string
+        - name: sortBy
+          in: query
+          style: form
+          schema:
+            type: string
       responses:
         '200':
-          description: decks were found
+          description: Success
           content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeckSearchResponse'
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/DeckSearchResponse'
-  /deck/like/{deckId}:
-    parameters:
-       - name: deckId
-         in: path
-         description: a guid of the deck that is wanted
-         required: true
-         schema:
-          type: string
-    patch:
-      tags:
-        - deck
-      summary: likes or removes like from a deck
-      responses:
-        '200':
-          description: deck was liked/disliked
-        '404':
-          description: deck not found
-  /deck/like/{deckId}/{userId}:
-    parameters:
-      - name: deckId
-        in: path
-        description: a guid of the deck that is wanted
-        required: true
-        schema:
-          type: string
-      - name: userId
-        in: path
-        description: a guid of the user
-        required: true
-        schema:
-          type: string
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeckSearchResponse'
+  /deck/users/{UserName}:
     get:
       tags:
-        - deck
-      summary: returns if a user likes a given deck
+        - DeckList
+      parameters:
+        - name: requestingUser
+          in: header
+          style: simple
+          schema:
+            type: string
+        - name: UserName
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
       responses:
-        '200': 
-          description: deck and user found
+        '200':
+          description: Success
           content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeckSearchResponse'
             application/json:
               schema:
-                type: boolean
-        '404':
-          description: either deck does not exist       
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeckSearchResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeckSearchResponse'
   /card/{cardId}:
-    parameters:
-      - name: cardId
-        in: path
-        description: a guid of the card that is wanted
-        required: true
-        schema:
-          type: string
     get:
       tags:
-        - card
-      summary: Get the specified card
+        - DeckList
+      parameters:
+        - name: cardId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+            format: uuid
       responses:
         '200':
-          description: card was found
+          description: Success
           content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Card'
             application/json:
               schema:
                 $ref: '#/components/schemas/Card'
-        '400':
-          description: Invalid cardId supplied
-        '404':
-          description: Card not found
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Card'
   /card/bulk:
-    parameters:
-      - name: cardArray
-        in: requestBody
-        description: an array of guids for cards that are wanted
-        required: true
-        schema:
-          type: array
-          items:
-            type: string
     post:
-      tags: 
-        - card
-      summary: Get a list of cards
+      tags:
+        - DeckList
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+                format: uuid
+          text/json:
+            schema:
+              type: array
+              items:
+                type: string
+                format: uuid
+          application/*+json:
+            schema:
+              type: array
+              items:
+                type: string
+                format: uuid
       responses:
         '200':
-          description: cards were found
+          description: Success
           content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Card'
             application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Card'
+            text/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Card'
   /card/search:
-    parameters:
-      - name: q
-        in: query
-        description: a full text query using percent encododing using scryfall syntax see https://scryfall.com/docs/syntax for more details
-        required: true
-        schema:
-          type: string
-          maxLength: 1000
-      - name: page
-        in: query
-        description: the page number for cards to display assumed to be first page if not given
-        required: false
-        schema:
-          type: number
-          minimum: 0
-      - name: pageSize
-        in: query
-        description: the maximum number of cards to display per page
-        required: false
-        schema:
-          type: number
-          minimum: 1
     get:
       tags:
-       - card
-      summary: search for cards
+        - DeckList
+      parameters:
+        - name: q
+          in: query
+          style: form
+          schema:
+            type: string
+        - name: page
+          in: query
+          style: form
+          schema:
+            type: integer
+            format: int32
+        - name: pageSize
+          in: query
+          style: form
+          schema:
+            type: integer
+            format: int32
       responses:
         '200':
-          description: cards found
+          description: Success
           content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Card'
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Card'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Card'
+  /deck/{deckId}/like:
+    patch:
+      tags:
+        - DeckList
+      parameters:
+        - name: deckId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+  /user:
+    post:
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNewUser'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreateNewUser'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreateNewUser'
+      responses:
+        '200':
+          description: Success
+  /user/login:
+    post:
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticateRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticateRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/AuthenticateRequest'
+      responses:
+        '200':
+          description: Success
 components:
   schemas:
-    User:
-      type: object
+    AuthenticateRequest:
       required:
-        - id
-        - username
         - email
-        - userStatus
+        - password
+      type: object
       properties:
-        id:
-          type: string
-        username:
-          type: string
-          example: theUser
         email:
+          minLength: 1
           type: string
-          example: john@email.com
-        userStatus:
+        password:
+          minLength: 1
           type: string
-          description: User Status
-          example: 'moderator'
-    DeckSearchResponse:
-      type: object
-      required:
-       - id
-       - name
-       - likes
-       - dislikes
-       - views
-       - editors
-       - created_date
-       - modified_date
-      properties:
-        id:
-          type: string
-          format: guid
-          example: '1103efb6-b3db-409b-951f-896efa60f59e'
-        name:
-          type: string
-          example: 'My Deck!'
-        cover_image:
-          type: string
-          format: url
-          example: 'https://cards.scryfall.io/art_crop/front/a/3/a31ffc9e-d21b-4a8f-ac67-695e38e09e3b.jpg?1706240553'
-        likes:
-          type: number
-          minimum: 0
-        dislikes:
-          type: number
-          minimum: 0
-        views:
-          type: number
-          minimum: 0
-        format:
-          type: string
-          example: 'standard'
-        editors:
-          type: array
-          items:
-            type: string
-            example: '1103efb6-b3db-409b-951f-896efa60f59e'
-        created_date:
-          type: date-time
-        modified_date:
-          type: date-time
-    Deck:
-      type: object
-      required:
-       - id
-       - name
-       - mainbaord
-       - sideboard
-       - considering
-       - likes
-       - dislikes
-       - views
-       - cover_image
-       - editors
-       - created_date
-       - modified_date
-      properties:
-        id:
-          type: string
-          format: guid
-          example: '1103efb6-b3db-409b-951f-896efa60f59e'
-        editors:
-          type: array
-          items:
-            type: string
-            example: '1103efb6-b3db-409b-951f-896efa60f59e'
-        name:
-          type: string
-          example: 'My Deck!'
-        format:
-          type: string
-          example: 'standard'
-        mainboard:
-          type: array
-          items:
-            $ref: '#/components/schemas/CardDeckResponse'
-        sideboard:
-          type: array
-          items:
-            $ref: '#/components/schemas/CardDeckResponse'
-        considering:
-          type: array
-          items:
-            $ref: '#/components/schemas/CardDeckResponse'
-        likes:
-          type: number
-          minimum: 0
-        dislikes:
-          type: number
-          minimum: 0
-        views:
-          type: number
-          minimum: 0
-        description:
-          type: string
-          maxLength: 100000
-        cover_image:
-          type: string
-          format: url
-          example: 'https://cards.scryfall.io/art_crop/front/a/3/a31ffc9e-d21b-4a8f-ac67-695e38e09e3b.jpg?1706240553'
-        commander_1:
-          type: string
-        commander_2:
-          type: string
-        created_date:
-          type: date-time
-        modified_date:
-          type: date-time
-        privacy:
-          type: string
-          example: 'public'
-    DeckCreationRequest:
-      type: object
-      required:
-       - id
-       - name
-       - mainbaord
-       - sideboard
-       - considering
-       - likes
-       - dislikes
-       - views
-       - cover_image
-       - editors
-      properties:
-        editors:
-          type: array
-          items:
-            type: string
-            example: '1103efb6-b3db-409b-951f-896efa60f59e'
-        name:
-          type: string
-          example: 'My Deck!'
-        format:
-          type: string
-          example: 'standard'
-        mainboard:
-          type: array
-          items:
-            schema:
-              type: string
-              format: guid
-        sideboard:
-          type: array
-          items:
-            schema:
-              type: string
-              format: guid
-        considering:
-          type: array
-          items:
-            schema:
-              type: string
-              format: guid
-        description:
-          type: string
-          maxLength: 100000
-        cover_image:
-          type: string
-          format: url
-          example: 'https://cards.scryfall.io/art_crop/front/a/3/a31ffc9e-d21b-4a8f-ac67-695e38e09e3b.jpg?1706240553'
-        commander_1:
-          type: string
-        commander_2:
-          type: string
-    CardDeckResponse:
-      type: object
-      required:
-       - number
-       - Card
-      properties:
-        number:
-          type: number
-          minimum: 1
-        CardInfo:
-          $ref: '#/components/schemas/CardInfo'
-    CardInfo:
-      type: object
-      required:
-       - name
-       - id
-       - cmc
-       - type_line
-       - image_uris
-      properties:
-        name: 
-          type: string
-        id:
-          type: string
-          format: guid
-          example: '1103efb6-b3db-409b-951f-896efa60f59e'
-        mana_cost:
-          type: string
-          format: mc
-          example: '{4}{W}{W}'
-          pattern: '(\d|[WUBRG])+'
-        cmc:
-          type: number
-          minimum: 0
-        type_line:
-          type: string
-          example: 'Sorcery'
-        image_uris:
-          type: array
-          items:
-            type: object
-            properties:
-              small:
-                type: string
-                format: url
-                example: 'https://cards.scryfall.io/small/front/a/3/a31ffc9e-d21b-4a8f-ac67-695e38e09e3b.jpg?1706240553'
-              normal:
-                type: string
-                format: url
-                example: 'https://cards.scryfall.io/normal/front/a/3/a31ffc9e-d21b-4a8f-ac67-695e38e09e3b.jpg?1706240553'
-              large:
-                type: string
-                format: url
-                example: 'https://cards.scryfall.io/large/front/a/3/a31ffc9e-d21b-4a8f-ac67-695e38e09e3b.jpg?1706240553'
-              png:
-                type: string
-                format: url
-                example: 'https://cards.scryfall.io/png/front/a/3/a31ffc9e-d21b-4a8f-ac67-695e38e09e3b.png?1706240553'
-              art_crop:
-                type: string
-                format: url
-                example: 'https://cards.scryfall.io/art_crop/front/a/3/a31ffc9e-d21b-4a8f-ac67-695e38e09e3b.jpg?1706240553'
-              border_crop:
-                type: string
-                format: url
-                example: 'https://cards.scryfall.io/border_crop/front/a/3/a31ffc9e-d21b-4a8f-ac67-695e38e09e3b.jpg?1706240553'
+      additionalProperties: false
     Card:
       type: object
-      required:
-       - id
-       - oracle_id
-       - name
-       - uri
-       - cmc
-       - legalities
-       - artist
       properties:
         id:
           type: string
-          format: guid
-          example: '1103efb6-b3db-409b-951f-896efa60f59e'
+          format: uuid
         oracle_id:
           type: string
-          format: guid
-          example: '1103efb6-b3db-409b-951f-896efa60f59e'
+          format: uuid
         multiverse_ids:
           type: array
           items:
-            type: string
-            format: guid
-            example: '1103efb6-b3db-409b-951f-896efa60f59e'
+            type: integer
+            format: int32
+          nullable: true
         tcgplayer_id:
-          type: number
-          minimum: 0
+          type: integer
+          format: int32
+          nullable: true
         cardmarket_id:
-          type: number
-          minimum: 0
+          type: integer
+          format: int32
+          nullable: true
+        oracle_text:
+          type: string
+          nullable: true
+        flavor_text:
+          type: string
+          nullable: true
         name:
           type: string
-          example: 'Austere Command'
+          nullable: true
         lang:
           type: string
-          example: 'en'
+          nullable: true
         release_at:
           type: string
-          format: date
-          example: '2024-02-16'
+          format: date-time
         uri:
           type: string
-          format: url
-          example: 'https://api.scryfall.com/cards/a31ffc9e-d21b-4a8f-ac67-695e38e09e3b'
+          format: uri
+          nullable: true
         scryfall_uri:
           type: string
-          format: url
-          example: 'https://scryfall.com/card/mkc/56/austere-command?utm_source=api'
+          format: uri
+          nullable: true
         layout:
           type: string
-          example: 'normal'
+          nullable: true
         highres_image:
           type: boolean
         image_status:
           type: string
-          example: 'high_res_scan'
+          nullable: true
         image_uris:
           type: array
           items:
-            type: object
-            properties:
-              small:
-                type: string
-                format: url
-                example: 'https://cards.scryfall.io/small/front/a/3/a31ffc9e-d21b-4a8f-ac67-695e38e09e3b.jpg?1706240553'
-              normal:
-                type: string
-                format: url
-                example: 'https://cards.scryfall.io/normal/front/a/3/a31ffc9e-d21b-4a8f-ac67-695e38e09e3b.jpg?1706240553'
-              large:
-                type: string
-                format: url
-                example: 'https://cards.scryfall.io/large/front/a/3/a31ffc9e-d21b-4a8f-ac67-695e38e09e3b.jpg?1706240553'
-              png:
-                type: string
-                format: url
-                example: 'https://cards.scryfall.io/png/front/a/3/a31ffc9e-d21b-4a8f-ac67-695e38e09e3b.png?1706240553'
-              art_crop:
-                type: string
-                format: url
-                example: 'https://cards.scryfall.io/art_crop/front/a/3/a31ffc9e-d21b-4a8f-ac67-695e38e09e3b.jpg?1706240553'
-              border_crop:
-                type: string
-                format: url
-                example: 'https://cards.scryfall.io/border_crop/front/a/3/a31ffc9e-d21b-4a8f-ac67-695e38e09e3b.jpg?1706240553'
+            type: string
+            format: uri
+          nullable: true
+        cmc:
+          type: integer
+          format: int32
         mana_cost:
           type: string
-          format: mc
-          example: '{4}{W}{W}'
-          pattern: '(\d|[WUBRG])+'
-        cmc:
-          type: number
-          minimum: 0
-        power:
-          type: number
-        toughness:
-          type: number
+          nullable: true
         type_line:
           type: string
-          example: 'Sorcery'
+          nullable: true
+        power:
+          type: string
+          nullable: true
+        toughness:
+          type: string
+          nullable: true
         colors:
           type: array
           items:
             type: string
-            example: 'B'
-            pattern: '[WUBRG]'
+          nullable: true
         color_identity:
           type: array
           items:
             type: string
-            example: 'B'
-            pattern: '[WUBRG]'
+          nullable: true
         keywords:
           type: array
           items:
             type: string
-            example: 'Treasure'
+          nullable: true
         legalities:
           type: array
           items:
             type: string
-            example: '"standard": "legal"'
-            pattern: '"\w+": "\w+"'
+          nullable: true
         games:
           type: array
           items:
             type: string
-            example: 'mtgo'
+          nullable: true
         reserved:
           type: boolean
         foil:
@@ -837,6 +460,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         oversized:
           type: boolean
         promo:
@@ -846,42 +470,230 @@ components:
         variation:
           type: boolean
         set_id:
-         type: string
-         format: guid
-         example: 'a944551a-73fa-41cd-9159-e8d0e4674403'
+          type: string
+          format: uuid
         set:
           type: string
-          example: 'vma'
-          pattern: '\w\w\w'
+          nullable: true
         set_name:
           type: string
-          example: "Vintage Masters"
+          nullable: true
         set_type:
           type: string
-          example: 'masters'
-        rarity: 
+          nullable: true
+        rarity:
           type: string
-          example: 'common'
+          nullable: true
         artist:
           type: string
-          example: 'Chris Rahn'
-  securitySchemes:
-    deckmanagement_auth:
-      type: oauth2
-      flows:
-        implicit:
-          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
-          scopes:
-            write:dekcs: modify decks in your account
-            read:decks: read your privated decks
-    usermanagement_auth:
-      type: oauth2
-      flows:
-        implicit:
-          authorizationUrl: temp
-          scopes:
-            manage:users: manage Users
-    api_key:
-      type: apiKey
-      name: api_key
-      in: header
+          nullable: true
+        card_faces:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardFace'
+          nullable: true
+      additionalProperties: false
+    CardAmmount:
+      type: object
+      properties:
+        amount:
+          type: integer
+          format: int32
+        CardInfo:
+          $ref: '#/components/schemas/Card'
+        is_commander:
+          type: boolean
+      additionalProperties: false
+    CardFace:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        image_uris:
+          type: array
+          items:
+            type: string
+            format: uri
+          nullable: true
+        mana_cost:
+          type: string
+          nullable: true
+        type_line:
+          type: string
+          nullable: true
+        colors:
+          type: array
+          items:
+            type: string
+          nullable: true
+        power:
+          type: string
+          nullable: true
+        toughness:
+          type: string
+          nullable: true
+        oracle_text:
+          type: string
+          nullable: true
+        flavor_text:
+          type: string
+          nullable: true
+      additionalProperties: false
+    CreateNewUser:
+      type: object
+      properties:
+        username:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+      additionalProperties: false
+    CreationCardAmmount:
+      type: object
+      properties:
+        amount:
+          type: integer
+          format: int32
+        card_id:
+          type: string
+          format: uuid
+        is_commander:
+          type: boolean
+      additionalProperties: false
+    DeckCreationRequest:
+      type: object
+      properties:
+        Privacy:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        format:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        cover_image:
+          type: string
+          nullable: true
+        mainboard:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreationCardAmmount'
+          nullable: true
+        sideboard:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreationCardAmmount'
+          nullable: true
+        considering:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreationCardAmmount'
+          nullable: true
+      additionalProperties: false
+    DeckResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        editors:
+          type: array
+          items:
+            type: string
+          nullable: true
+        privacy:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        format:
+          type: string
+          nullable: true
+        likes:
+          type: integer
+          format: int32
+        dislikes:
+          type: integer
+          format: int32
+        views:
+          type: integer
+          format: int32
+        description:
+          type: string
+          nullable: true
+        cover_image:
+          type: string
+          nullable: true
+        mainboard:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardAmmount'
+          nullable: true
+        sideboard:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardAmmount'
+          nullable: true
+        considering:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardAmmount'
+          nullable: true
+        created_date:
+          type: string
+          format: date-time
+        modified_date:
+          type: string
+          format: date-time
+        liked:
+          type: boolean
+      additionalProperties: false
+    DeckSearchResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        editors:
+          type: array
+          items:
+            type: string
+          nullable: true
+        privacy:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        format:
+          type: string
+          nullable: true
+        likes:
+          type: integer
+          format: int32
+        dislikes:
+          type: integer
+          format: int32
+        views:
+          type: integer
+          format: int32
+        cover_image:
+          type: string
+          nullable: true
+        created_date:
+          type: string
+          format: date-time
+        modified_date:
+          type: string
+          format: date-time
+      additionalProperties: false
